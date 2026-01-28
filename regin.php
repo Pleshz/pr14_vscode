@@ -43,6 +43,10 @@
 					<input name="_password" type="password" placeholder="" onkeypress="return PressToEnter(event)"/>
 					<div class = "sub-name">Повторите пароль:</div>
 					<input name="_passwordCopy" type="password" placeholder="" onkeypress="return PressToEnter(event)"/>
+					<div class ="sub-name">Введите кодовый вопрос для восстановления учетной записи:</div>
+					<input name="_codeQuestion" type="text" placeholder=""/>
+					<div class ="sub-name">Ответ на кодовый вопрос:</div>
+					<input name="_codeAnswer" type="text" placeholder=""/>
 					
 					<a href="login.php">Вернуться</a>
 					<input type="button" class="button" value="Зайти" onclick="RegIn()" style="margin-top: 0px;"/>
@@ -65,6 +69,8 @@
 				var _login = document.getElementsByName("_login")[0].value;
 				var _password = document.getElementsByName("_password")[0].value;
 				var _passwordCopy = document.getElementsByName("_passwordCopy")[0].value;
+				var _codeQuestion = document.getElementsByName("_codeQuestion")[0].value;
+				var _codeAnswer = document.getElementsByName("_codeAnswer")[0].value;
 				
 				if(_login != "") {
 					if(_password != "") {
