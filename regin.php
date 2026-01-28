@@ -81,6 +81,8 @@
 							var data = new FormData();
 							data.append("login", _login);
 							data.append("password", _password);
+							data.append("codeQuestion", _codeQuestion);
+							data.append("codeAnswer", _codeAnswer);
 							
 							// AJAX запрос
 							$.ajax({

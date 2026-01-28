@@ -1,9 +1,8 @@
 <?php
 	session_start();
-	include("./settings/connect_datebase.php");
-	
 	if (isset($_SESSION['user'])) {
 		if($_SESSION['user'] != -1) {
+			include("./settings/connect_datebase.php");
 			
 			$user_query = $mysqli->query("SELECT * FROM `users` WHERE `id` = ".$_SESSION['user']);
 			while($user_read = $user_query->fetch_row()) {
@@ -13,40 +12,56 @@
 		}
  	}
 ?>
+<!DOCTYPE HTML>
 <html>
 	<head> 
-		<meta charset="utf-8">
-		<title> Авторизация </title>
-		
 		<script src="https://code.jquery.com/jquery-1.8.3.js"></script>
+		<meta charset="utf-8">
+		<title> Восстановление учетной записи </title>
+		
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
 		<div class="top-menu">
+			<a href=# class = "singin"><img src = "img/ic-login.png"/></a>
+		
 			<a href=#><img src = "img/logo1.png"/></a>
 			<div class="name">
 				<a href="index.php">
-					<div class="subname">БЗОПАСНОСТЬ  ВЕБ-ПРИЛОЖЕНИЙ</div>
-					Пермский авиационный техникум им. А. Д. Швецова
+					<div class="subname">Электронная приемная комиссия</div>
+					Пермского авиационного техникума им. А. Д. Швецова
 				</a>
 			</div>
 		</div>
 		<div class="space"> </div>
 		<div class="main">
 			<div class="content">
+				<div class="input-error">
+					<img src="img/ic-close.png" class="close" onclick="DisableError()"/>
+					<img src = "img/ic-error.png"/>
+					Непредвиденная ошибка.
+					<div class="message">Вы неправильно ввели ответ на контрольный вопрос.</div>
+				</div>
+			
+				<div class="success" style="display: none;">
+					<img src = "img/ic_success.png">
+					<div class = "name">Успешно!</div>
+					<div class = "description">
+						Ваша учетная запись была восстановлена.
+					</div>
+				</div>
+			
 				<div class = "login">
-					<div class="name">Авторизация</div>
+					<div class="name">Восстановление учетной записи</div>
 				
 					<div class = "sub-name">Логин:</div>
-					<input name="_login" type="text" placeholder="" onkeypress="return PressToEnter(event)"/>
-					<div class = "sub-name">Пароль:</div>
-					<input name="_password" type="password" placeholder="" onkeypress="return PressToEnter(event)"/>
+                    <input name="_login" type="text"/>
+                    <div class = "sub-name">Ответ на контрольный вопрос:</div>
+                    <input name="_codeAnswer" type="text"/>
 					
-					<a href="regin.php">Регистрация</a>
-					<br><a href="recovery.php">Забыли пароль?</a>
-					<br><a href="accountRecovery.php">Восстановить учётку?</a>
-					<input type="button" class="button" value="Войти" onclick="LogIn()"/>
-					<img src = "img/loading.gif" class="loading"/>
+					<input type="button" class="button" value="Отправить" onclick="LogIn()" style="margin-top: 0px;"/>
+					<img src = "img/loading.gif" class="loading" style="margin-top: 0px;"/>
 				</div>
 				
 				<div class="footer">
@@ -57,23 +72,23 @@
 			</div>
 		</div>
 		
-		<script>
+		<script>			
 			function LogIn() {
-				var loading = document.getElementsByClassName("loading")[0];
-				var button = document.getElementsByClassName("button")[0];
-				
 				var _login = document.getElementsByName("_login")[0].value;
-				var _password = document.getElementsByName("_password")[0].value;
-				loading.style.display = "block";
-				button.className = "button_diactive";
+                var _codeAnswer = document.getElementsByName("_codeAnswer")[0].value;
+				var loading = document.querySelector('.loading');
+    			var button = document.querySelector('.button');
+			
+    			loading.style.display = "block";
+    			button.className = "button_diactive";
 				
 				var data = new FormData();
-				data.append("login", _login);
-				data.append("password", _password);
+                data.append("login", _login);
+                data.append("codeAnswer", _codeAnswer);
 				
 				// AJAX запрос
 				$.ajax({
-					url         : 'ajax/login_user.php',
+					url         : 'ajax/accountRecovery.php',
 					type        : 'POST', // важно!
 					data        : data,
 					cache       : false,
@@ -84,8 +99,7 @@
 					contentType : false, 
 					// функция успешного ответа сервера
 					success: function (_data) {
-						console.log("Авторизация прошла успешно, id: " +_data);
-						if(_data == "") {
+						if(_data == -1) {
 							loading.style.display = "none";
 							button.className = "button";
 							alert("Логин или пароль не верный.");
@@ -104,20 +118,6 @@
 					}
 				});
 			}
-			
-			function PressToEnter(e) {
-				if (e.keyCode == 13) {
-					var _login = document.getElementsByName("_login")[0].value;
-					var _password = document.getElementsByName("_password")[0].value;
-					
-					if(_password != "") {
-						if(_login != "") {
-							LogIn();
-						}
-					}
-				}
-			}
-			
 		</script>
 	</body>
 </html>
